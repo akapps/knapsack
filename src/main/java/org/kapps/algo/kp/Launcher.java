@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.kapps.algo.kp.bf.BruteForce;
+import org.kapps.algo.kp.genetic.Genetic;
 
 /**
  * @author Antoine Kapps
@@ -48,7 +48,7 @@ public class Launcher {
         System.out.println("  -> number of possible combinations = 2^" + items.length + " = " + (int) Math.pow(2, items.length));
         System.out.println();
 
-        final Algorithm algorithm = new BruteForce();
+        final Algorithm algorithm = new Genetic();
         System.out.println("Algorithm used to resolve : " + algorithm.getClass().getSimpleName());
 
         final long start = System.currentTimeMillis();
@@ -56,29 +56,7 @@ public class Launcher {
         final long end = System.currentTimeMillis();
 
         printResult(results);
-        System.out.println("Time for examination : " + prettyTime(end - start));
-    }
-
-
-    private static String prettyTime(long value) {
-        long seconds = value / 1000;
-        long ms = value % 1000;
-        String result = ms + "ms";
-
-        if (seconds > 0) {
-            result = (seconds % 60) + "sec " + result;
-            long min = seconds / 60;
-
-            if (min > 0) {
-                result = (min % 60) + "min " + result;
-                long hours = min / 60;
-
-                if (hours > 0)
-                    result = hours + "h " + result;
-            }
-        }
-
-        return result;
+        System.out.println("Time for examination : " + PrintUtils.prettyTime(end - start));
     }
 
 
@@ -89,7 +67,7 @@ public class Launcher {
             Result r = optima.iterator().next();
 
             System.out.println("    Optimum encountered at test n°" + r.getTestNumber()
-                    + " - " + toString(r.getVector()) + "  with value = " + r.getValue() + " and weight = " + r.getWeight());
+                    + " - " + PrintUtils.toString(r.getVector()) + "  with value = " + r.getValue() + " and weight = " + r.getWeight());
         }
 
         else {
@@ -97,19 +75,9 @@ public class Launcher {
 
             for (Result r : optima) {
                 System.out.println("    * test n°" + r.getTestNumber()
-                        + " - " + toString(r.getVector()) + "  with value = " + r.getValue() + " and weight = " + r.getWeight());
+                        + " - " + PrintUtils.toString(r.getVector()) + "  with value = " + r.getValue() + " and weight = " + r.getWeight());
             }
         }
-    }
-
-    /** That's stupid but it helps me translate from boolean[] to int[] ... */
-    private static String toString(boolean[] tab) {
-        StringBuilder sb = new StringBuilder().append('[');
-        for (boolean b : tab)
-            sb.append(b ? '1' : '0').append(',');
-
-        sb.setLength(sb.length() -1);
-        return sb.append(']').toString();
     }
 
 }
