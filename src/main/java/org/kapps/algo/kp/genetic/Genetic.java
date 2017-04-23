@@ -27,7 +27,7 @@ public class Genetic implements Algorithm {
         final Context.Examiner examiner = problem.createExaminer();
 
         firstGenerationSupplier = new RandomPopulation(POPULATION_NUMBER, n, examiner);
-        reproducer = new RandomReproduction(examiner);
+        reproducer = new BestElementsReproduction(examiner);
 
         int turnsLeft = GENERATIONS_NUMBER;
 
