@@ -1,5 +1,7 @@
 package org.kapps.algo.kp.genetic;
 
+import org.kapps.algo.kp.Context;
+
 import java.util.List;
 
 /**
@@ -8,6 +10,7 @@ import java.util.List;
 class PopulationEvaluation {
 
     private final Genom[] population;
+    private final Context.Examiner examiner;
 
     // evaluation
     private int nbSuccess = 0;
@@ -15,22 +18,26 @@ class PopulationEvaluation {
     private int minValue = Integer.MAX_VALUE;
     private int maxValue = 0;
 
-    PopulationEvaluation(Genom[] population, int capacity) {
+    PopulationEvaluation(Genom[] population, int capacity, Context.Examiner examiner) {
         this.population = population;
+        this.examiner = examiner;
 
         evaluate(capacity);
     }
 
-    PopulationEvaluation(List<Genom> population, int capacity) {
-        this(population.toArray(new Genom[population.size()]), capacity);
+    PopulationEvaluation(List<Genom> population, int capacity, Context.Examiner examiner) {
+        this(population.toArray(new Genom[population.size()]), capacity, examiner);
     }
 
     private void evaluate(int capacity) {
         int sumValues = 0;
 
         for (Genom genom : population) {
-            int weight = genom.weight;
-            int value = genom.value;
+            final int[] w_v = examiner.evaluate(genom.vector);
+
+            int weight = w_v[0];
+            int value = w_v[1];
+            examiner.compare(genom.vector, weight, value);
 
             if (weight <= capacity) {
                 nbSuccess++;

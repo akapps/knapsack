@@ -20,14 +20,14 @@ public class Genetic implements Algorithm {
     private static Supplier<List<Genom>> firstGenerationSupplier;
     private static Function<List<Genom>, List<Genom>> reproducer;
 
-
+    @Override
     public Collection<Result> evaluate(Context problem) {
 
         final int n = problem.getItems().length;
         final Context.Examiner examiner = problem.createExaminer();
 
-        firstGenerationSupplier = new RandomPopulation(POPULATION_NUMBER, n, examiner);
-        reproducer = new RandomReproduction(examiner);
+        firstGenerationSupplier = new RandomPopulation(POPULATION_NUMBER, n);
+        reproducer = new RandomReproduction();
 
         int turnsLeft = GENERATIONS_NUMBER;
 
@@ -35,7 +35,7 @@ public class Genetic implements Algorithm {
         // First generation :
         // ------------------
         List<Genom> population = firstGenerationSupplier.get();
-        new PopulationEvaluation(population, problem.getCapacity())
+        new PopulationEvaluation(population, problem.getCapacity(), examiner)
                 .printSummary();
 
 
@@ -54,7 +54,7 @@ public class Genetic implements Algorithm {
 
             // No bias, no optimization : we turn to next generation
             population = nextGeneration;
-            new PopulationEvaluation(population, problem.getCapacity())
+            new PopulationEvaluation(population, problem.getCapacity(), examiner)
                     .printSummary();
         }
 
